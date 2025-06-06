@@ -2,7 +2,7 @@
 
 This repository contains a small Tkinter application that visualizes a few data structure and algorithm concepts. Currently it shows:
 
-- **Bubble sort** on a list of random numbers.
+- **Bubble sort** on a list of random numbers. Use the **Bubble Sort** button to animate the algorithm and **Stop** to halt it.
 - **Stack** operations (push and pop).
 
 The app is written in Python and uses only the standard library. No extra dependencies are required.

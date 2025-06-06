@@ -1,7 +1,6 @@
 import tkinter.ttk as ttk
 import tkinter as tk
 import random
-import time
 
 class SortVisualizer:
     def __init__(self, parent):
@@ -15,8 +14,11 @@ class SortVisualizer:
         self.shuffle_btn.pack(side=tk.LEFT, padx=5)
         self.sort_btn = tk.Button(button_frame, text="Bubble Sort", command=self.bubble_sort)
         self.sort_btn.pack(side=tk.LEFT, padx=5)
+        self.stop_btn = tk.Button(button_frame, text="Stop", command=self.stop_sort, state=tk.DISABLED)
+        self.stop_btn.pack(side=tk.LEFT, padx=5)
         self.array = []
         self.bar_width = 0
+        self.after_id = None
         self.shuffle()
 
     def shuffle(self):
@@ -35,14 +37,35 @@ class SortVisualizer:
             self.canvas.create_rectangle(x0, y0, x1, y1, fill=color)
 
     def bubble_sort(self):
-        n = len(self.array)
-        for i in range(n):
-            for j in range(0, n - i - 1):
-                if self.array[j] > self.array[j + 1]:
-                    self.array[j], self.array[j + 1] = self.array[j + 1], self.array[j]
-                    self.draw_bars(highlight=(j, j + 1))
-                    self.frame.update()
-                    time.sleep(0.05)
+        if self.after_id:
+            return
+        self.n = len(self.array)
+        self.i = 0
+        self.j = 0
+        self.sort_btn.config(state=tk.DISABLED)
+        self.stop_btn.config(state=tk.NORMAL)
+        self.after_id = self.frame.after(0, self._bubble_sort_step)
+
+    def _bubble_sort_step(self):
+        if self.i < self.n:
+            if self.j < self.n - self.i - 1:
+                if self.array[self.j] > self.array[self.j + 1]:
+                    self.array[self.j], self.array[self.j + 1] = self.array[self.j + 1], self.array[self.j]
+                self.draw_bars(highlight=(self.j, self.j + 1))
+                self.j += 1
+            else:
+                self.j = 0
+                self.i += 1
+            self.after_id = self.frame.after(50, self._bubble_sort_step)
+        else:
+            self.stop_sort()
+
+    def stop_sort(self):
+        if self.after_id:
+            self.frame.after_cancel(self.after_id)
+            self.after_id = None
+        self.sort_btn.config(state=tk.NORMAL)
+        self.stop_btn.config(state=tk.DISABLED)
         self.draw_bars()
 
 
