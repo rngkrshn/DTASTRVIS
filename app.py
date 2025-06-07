@@ -2,19 +2,29 @@ import tkinter.ttk as ttk
 import tkinter as tk
 import random
 
+# Color scheme
+BG_COLOR = "#282c34"
+CANVAS_BG = "#1e1e1e"
+BAR_COLOR = "#61afef"
+BAR_HIGHLIGHT = "#e06c75"
+STACK_COLOR = "#98c379"
+STACK_BG = "#1e1e1e"
+BTN_BG = "#3e4451"
+BTN_FG = "white"
+
 class SortVisualizer:
     def __init__(self, parent):
-        self.frame = tk.Frame(parent)
+        self.frame = tk.Frame(parent, bg=BG_COLOR)
         self.frame.pack(fill=tk.BOTH, expand=True)
-        self.canvas = tk.Canvas(self.frame, width=600, height=300, bg="white")
+        self.canvas = tk.Canvas(self.frame, width=600, height=300, bg=CANVAS_BG, highlightthickness=0)
         self.canvas.pack(pady=10)
-        button_frame = tk.Frame(self.frame)
+        button_frame = tk.Frame(self.frame, bg=BG_COLOR)
         button_frame.pack()
-        self.shuffle_btn = tk.Button(button_frame, text="Shuffle", command=self.shuffle)
+        self.shuffle_btn = tk.Button(button_frame, text="Shuffle", command=self.shuffle, bg=BTN_BG, fg=BTN_FG)
         self.shuffle_btn.pack(side=tk.LEFT, padx=5)
-        self.sort_btn = tk.Button(button_frame, text="Bubble Sort", command=self.bubble_sort)
+        self.sort_btn = tk.Button(button_frame, text="Bubble Sort", command=self.bubble_sort, bg=BTN_BG, fg=BTN_FG)
         self.sort_btn.pack(side=tk.LEFT, padx=5)
-        self.stop_btn = tk.Button(button_frame, text="Stop", command=self.stop_sort, state=tk.DISABLED)
+        self.stop_btn = tk.Button(button_frame, text="Stop", command=self.stop_sort, state=tk.DISABLED, bg=BTN_BG, fg=BTN_FG)
         self.stop_btn.pack(side=tk.LEFT, padx=5)
         self.array = []
         self.bar_width = 0
@@ -33,8 +43,8 @@ class SortVisualizer:
             y0 = 300 - val * 2
             x1 = (i + 1) * self.bar_width
             y1 = 300
-            color = "green" if highlight and i in highlight else "blue"
-            self.canvas.create_rectangle(x0, y0, x1, y1, fill=color)
+            color = BAR_HIGHLIGHT if highlight and i in highlight else BAR_COLOR
+            self.canvas.create_rectangle(x0, y0, x1, y1, fill=color, outline="")
 
     def bubble_sort(self):
         if self.after_id:
@@ -71,17 +81,17 @@ class SortVisualizer:
 
 class StackVisualizer:
     def __init__(self, parent):
-        self.frame = tk.Frame(parent)
+        self.frame = tk.Frame(parent, bg=BG_COLOR)
         self.frame.pack(fill=tk.BOTH, expand=True)
-        self.canvas = tk.Canvas(self.frame, width=200, height=300, bg="white")
+        self.canvas = tk.Canvas(self.frame, width=200, height=300, bg=STACK_BG, highlightthickness=0)
         self.canvas.pack(pady=10)
-        button_frame = tk.Frame(self.frame)
+        button_frame = tk.Frame(self.frame, bg=BG_COLOR)
         button_frame.pack()
         self.entry = tk.Entry(button_frame, width=10)
         self.entry.pack(side=tk.LEFT, padx=5)
-        self.push_btn = tk.Button(button_frame, text="Push", command=self.push)
+        self.push_btn = tk.Button(button_frame, text="Push", command=self.push, bg=BTN_BG, fg=BTN_FG)
         self.push_btn.pack(side=tk.LEFT, padx=5)
-        self.pop_btn = tk.Button(button_frame, text="Pop", command=self.pop)
+        self.pop_btn = tk.Button(button_frame, text="Pop", command=self.pop, bg=BTN_BG, fg=BTN_FG)
         self.pop_btn.pack(side=tk.LEFT, padx=5)
         self.stack = []
         self.draw_stack()
@@ -95,8 +105,8 @@ class StackVisualizer:
             y0 = 270 - i * height
             x1 = x0 + width
             y1 = y0 + height
-            self.canvas.create_rectangle(x0, y0, x1, y1, fill="lightblue")
-            self.canvas.create_text((x0 + x1) / 2, (y0 + y1) / 2, text=str(value))
+            self.canvas.create_rectangle(x0, y0, x1, y1, fill=STACK_COLOR, outline="")
+            self.canvas.create_text((x0 + x1) / 2, (y0 + y1) / 2, text=str(value), fill=BTN_FG)
 
     def push(self):
         value = self.entry.get()
@@ -115,11 +125,19 @@ class App:
     def __init__(self, root):
         root.title("DSA Visualizer")
         root.geometry("620x400")
+        root.configure(bg=BG_COLOR)
+
+        style = ttk.Style()
+        style.theme_use("default")
+        style.configure("TNotebook", background=BG_COLOR)
+        style.configure("TNotebook.Tab", background=BTN_BG, foreground=BTN_FG)
+        style.map("TNotebook.Tab", background=[("selected", CANVAS_BG)])
+
         self.notebook = ttk.Notebook(root)
         self.notebook.pack(fill=tk.BOTH, expand=True)
 
-        self.sort_tab = tk.Frame(self.notebook)
-        self.stack_tab = tk.Frame(self.notebook)
+        self.sort_tab = tk.Frame(self.notebook, bg=BG_COLOR)
+        self.stack_tab = tk.Frame(self.notebook, bg=BG_COLOR)
 
         self.notebook.add(self.sort_tab, text="Sorting")
         self.notebook.add(self.stack_tab, text="Stack")
