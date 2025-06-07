@@ -7,6 +7,14 @@ This repository contains a small Tkinter application that visualizes a few data 
 
 The app is written in Python and uses only the standard library. No extra dependencies are required. The interface is color-themed for a more engaging experience.
 
+## Requirements
+
+- Recommended Python **3.10** or later
+- Tkinter requires a desktop environment and may not run in a headless setup
+
+This project is provided for educational purposes only and is licensed under the
+[MIT License](LICENSE).
+
 ## Running the app
 
 ```bash
